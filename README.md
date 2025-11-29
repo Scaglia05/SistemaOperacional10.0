@@ -199,8 +199,6 @@ O simulador permite:
   * Políticas de alocação de memória Best Fit
   * Métricas detalhadas de utilização de dispositivos e tempo de retorno
 
-![Progresso do Simulador](https://media.giphy.com/media/3o7TKPj6q0hWcdN0Vm/giphy.gif)
-
 ---
 
 ## Limitações Conhecidas
