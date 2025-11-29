@@ -99,17 +99,10 @@ O simulador é **totalmente independente do sistema operacional hospedeiro**, ut
 
 ## Estrutura do Projeto
 
-* `Nucleo_PassouAqui` – inicialização e gerenciamento central do simulador.
-* `Processos_PassouAqui` – controle de PCBs.
-* `Threads_PassouAqui` – controle de TCBs.
-* `Escalonador_PassouAqui` – algoritmos de CPU configuráveis.
-* `Memoria_PassouAqui` – paginação, molduras, TLB e estatísticas básicas.
-* `EntradaSaida_PassouAqui` – simulação de dispositivos.
-* `SistemaDeArquivos_PassouAqui` – operações de arquivos e diretórios.
-* `Interface_PassouAqui` – execução de workloads e linha de comando.
-* `Metricas_PassouAqui` – geração de logs e estatísticas.
-* `Utilitarios` – funções de apoio, IDs e aleatoriedade.
-
+* `Nucleo` – inicialização e gerenciamento central do simulador; Geração de logs e estatísticas; Simulação de dispositivos; Algoritmos de CPU configuráveis
+* `Processos_PassouAqui` – controle de PCBs; Paginação, molduras, TLB e estatísticas básicas; Controle de TCBs; 
+* `SistemaDeArquivos` – operações de arquivos e diretórios;  Funções de apoio, IDs e aleatoriedade
+* `Interface` – execução de workloads e linha de comando.
 ---
 
 ## Progresso do Projeto
