@@ -1,6 +1,6 @@
-﻿using SimuladorSO.Enum;
+﻿using SistemaOperacional10._0.Enum;
 
-namespace SimuladorSO.Processos
+namespace SistemaOperacional10._0.Processos
 {
     public class ThreadSimulada
     {

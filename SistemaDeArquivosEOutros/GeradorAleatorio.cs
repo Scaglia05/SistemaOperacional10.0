@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SimuladorSO.SistemaDeArquivosEOutros
+namespace SistemaOperacional10._0.SistemaDeArquivosEOutros
 {
     public static class Randomizador
     {

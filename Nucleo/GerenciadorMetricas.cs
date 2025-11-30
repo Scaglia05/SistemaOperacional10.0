@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using SimuladorSO.Enum;
-using SimuladorSO.Processos;
+using SistemaOperacional10._0.Enum;
+using SistemaOperacional10._0.Processos;
 
-namespace SimuladorSO.Nucleo
+namespace SistemaOperacional10._0.Nucleo
 {
-    public class GerenciadorDeMetricas
+    public class GerenciadorMetricas
     {
         private readonly Kernel _kernel;
         private readonly Dictionary<string, Metrica> _metricasProcessos = new();
         private readonly Dictionary<string, Metrica> _metricasDispositivos = new();
         private readonly Metrica _metricasMemoria = new();
 
-        public GerenciadorDeMetricas(Kernel kernel) => _kernel = kernel;
+        public GerenciadorMetricas(Kernel kernel) => _kernel = kernel;
 
         public void ColetarMetricas()
         {

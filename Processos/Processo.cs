@@ -1,7 +1,7 @@
-﻿using SimuladorSO.Enum;
+﻿using SistemaOperacional10._0.Enum;
 using System.Collections.Generic;
 
-namespace SimuladorSO.Processos
+namespace SistemaOperacional10._0.Processos
 {
     public class PCB
     {

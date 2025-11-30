@@ -1,6 +1,6 @@
-﻿using SimuladorSO.Nucleo;
+﻿using SistemaOperacional10._0.Nucleo;
 
-namespace SimuladorSO.SistemaDeArquivosEOutros
+namespace SistemaOperacional10._0.SistemaDeArquivosEOutros
 {
     public class ManipuladorArquivo
     {
@@ -28,7 +28,7 @@ namespace SimuladorSO.SistemaDeArquivosEOutros
         public List<FCB> ObterArquivosAbertos() => _arquivosAbertos.Values.SelectMany(l => l).ToList();
     }
 
-    public class SistemaDeArquivos
+    public class SistemaArquivos
     {
         private readonly Kernel _kernel;
         private readonly EntradaDiretorio _raiz;
@@ -36,7 +36,7 @@ namespace SimuladorSO.SistemaDeArquivosEOutros
         private readonly ManipuladorArquivo _manipuladorArquivo = new();
         private readonly TabelaDeAlocacao _tabelaAlocacao = new();
 
-        public SistemaDeArquivos(Kernel kernel)
+        public SistemaArquivos(Kernel kernel)
         {
             _kernel = kernel;
             _raiz = new EntradaDiretorio("/");
@@ -58,7 +58,7 @@ namespace SimuladorSO.SistemaDeArquivosEOutros
             if (!diretorio.Arquivos.ContainsKey(nomeArquivo))
             {
                 diretorio.Arquivos[nomeArquivo] = new EntradaArquivo(nomeArquivo);
-                _kernel.RegistrarEvento($"Arquivo criado: {caminho}");
+                _kernel.RegistrarLog($"Arquivo criado: {caminho}");
             } else
             {
                 Console.WriteLine($"Arquivo {caminho} já existe.");
@@ -71,7 +71,7 @@ namespace SimuladorSO.SistemaDeArquivosEOutros
             if (!_diretorioAtual.Subdiretorios.ContainsKey(nome))
             {
                 _diretorioAtual.Subdiretorios[nome] = new EntradaDiretorio(nome);
-                _kernel.RegistrarEvento($"Diretório criado: {nome}");
+                _kernel.RegistrarLog($"Diretório criado: {nome}");
             } else
                 Console.WriteLine($"Diretório {nome} já existe.");
         }
@@ -95,14 +95,14 @@ namespace SimuladorSO.SistemaDeArquivosEOutros
                 _manipuladorArquivo.AbrirArquivo(caminho, pidSimbolico, 2);
                 arquivo.Aberto = true;
                 processo.AbrirArquivo(caminho);
-                _kernel.RegistrarEvento($"Arquivo aberto: {caminho} por {pidSimbolico}");
+                _kernel.RegistrarLog($"Arquivo aberto: {caminho} por {pidSimbolico}");
             } else
             {
                 _manipuladorArquivo.FecharArquivo(caminho, pidSimbolico);
                 processo.FecharArquivo(caminho);
                 if (!_manipuladorArquivo.EstaAberto(caminho))
                     arquivo.Aberto = false;
-                _kernel.RegistrarEvento($"Arquivo fechado: {caminho} por {pidSimbolico}");
+                _kernel.RegistrarLog($"Arquivo fechado: {caminho} por {pidSimbolico}");
             }
         }
 
@@ -118,13 +118,13 @@ namespace SimuladorSO.SistemaDeArquivosEOutros
             arquivo.TempoModificacao = _kernel.Clock.TempoAtual;
             _tabelaAlocacao.AlocarBlocos(caminho, tamanho / 512 + 1);
 
-            _kernel.RegistrarEvento($"Escrita em arquivo: {caminho} ({tamanho} bytes) por {pidSimbolico}");
+            _kernel.RegistrarLog($"Escrita em arquivo: {caminho} ({tamanho} bytes) por {pidSimbolico}");
         }
 
         private void OperacaoArquivo(string pidSimbolico, string caminho, string operacao, int tamanho)
         {
             if (ObterArquivo(caminho) != null)
-                _kernel.RegistrarEvento($"{operacao} de arquivo: {caminho} ({tamanho} bytes) por {pidSimbolico}");
+                _kernel.RegistrarLog($"{operacao} de arquivo: {caminho} ({tamanho} bytes) por {pidSimbolico}");
             else
                 Console.WriteLine($"Arquivo {caminho} não encontrado.");
         }
@@ -137,7 +137,7 @@ namespace SimuladorSO.SistemaDeArquivosEOutros
             if (diretorio != null && diretorio.Arquivos.Remove(nomeArquivo))
             {
                 _tabelaAlocacao.LiberarBlocos(caminho);
-                _kernel.RegistrarEvento($"Arquivo apagado: {caminho}");
+                _kernel.RegistrarLog($"Arquivo apagado: {caminho}");
             } else
                 Console.WriteLine($"Arquivo {caminho} não encontrado.");
         }

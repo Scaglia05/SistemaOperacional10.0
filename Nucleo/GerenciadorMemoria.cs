@@ -1,25 +1,27 @@
-﻿using SimuladorSO.SistemaDeArquivosEOutros;
+﻿using SistemaOperacional10._0.SistemaDeArquivosEOutros;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SimuladorSO.Nucleo
+namespace SistemaOperacional10._0.Nucleo
 {
-    public class GerenciadorDeMemoria
+    public class GerenciadorMemoria
     {
         private readonly Kernel _kernel;
         private readonly TabelaDeMolduras _tabelaMolduras;
         private readonly Dictionary<string, TabelaDePaginas> _tabelasPaginas = new();
         private readonly TLB _tlb;
         private int _faltasPagina;
+
         public int FaltasPagina => _faltasPagina;
         public TLB TLB => _tlb;
 
-        public GerenciadorDeMemoria(Kernel kernel)
+        public GerenciadorMemoria(Kernel kernel)
         {
             _kernel = kernel;
-            _tabelaMolduras = new TabelaDeMolduras(_kernel.NumeroMolduras);
-            _tlb = new TLB(_kernel.TamanhoTLB);
+            // CORREÇÃO: Acesso via _kernel.Configuracoes
+            _tabelaMolduras = new TabelaDeMolduras(_kernel.Configuracoes.NumeroMolduras);
+            _tlb = new TLB(_kernel.Configuracoes.TamanhoTLB);
         }
 
         public void AlocarMemoria(string pid, int tamanhoBytes)
@@ -31,7 +33,8 @@ namespace SimuladorSO.Nucleo
                 return;
             }
 
-            int tamanhoPagina = _kernel.TamanhoPagina;
+            // CORREÇÃO: Acesso via _kernel.Configuracoes
+            int tamanhoPagina = _kernel.Configuracoes.TamanhoPagina;
             int numeroPaginas = (int)Math.Ceiling(tamanhoBytes / (double)tamanhoPagina);
 
             if (!_tabelasPaginas.ContainsKey(pid))
@@ -41,7 +44,7 @@ namespace SimuladorSO.Nucleo
                 processo.PCB.TabelaPaginasID = tabelaID;
             }
 
-            _kernel.RegistrarEvento(
+            _kernel.RegistrarLog(
                 $"Memória alocada para {pid}: {tamanhoBytes} bytes ({numeroPaginas} páginas)"
             );
         }
@@ -55,7 +58,7 @@ namespace SimuladorSO.Nucleo
             _tabelasPaginas.Remove(pid);
             _tlb.LimparProcesso(pid);
 
-            _kernel.RegistrarEvento($"Memória liberada para {pid}");
+            _kernel.RegistrarLog($"Memória liberada para {pid}");
         }
 
         public void AcessarMemoria(string pid, int enderecoLogico)
@@ -66,12 +69,14 @@ namespace SimuladorSO.Nucleo
                 return;
             }
 
-            int tamanhoPagina = _kernel.TamanhoPagina;
+            // CORREÇÃO: Acesso via _kernel.Configuracoes
+            int tamanhoPagina = _kernel.Configuracoes.TamanhoPagina;
             int numeroPagina = enderecoLogico / tamanhoPagina;
             int deslocamento = enderecoLogico % tamanhoPagina;
             int? moldura = null;
 
-            if (_kernel.TLBAtivada)
+            // CORREÇÃO: Acesso via _kernel.Configuracoes
+            if (_kernel.Configuracoes.TLBAtivada)
                 moldura = _tlb.Consultar(pid, numeroPagina);
 
             if (moldura == null)
@@ -82,7 +87,7 @@ namespace SimuladorSO.Nucleo
                 if (!pagina.Presente)
                 {
                     _faltasPagina++;
-                    _kernel.RegistrarEvento($"Falta de página: {pid} - Página {numeroPagina}");
+                    _kernel.RegistrarLog($"Falta de página: {pid} - Página {numeroPagina}");
 
                     var molduraAlocada = _tabelaMolduras.Alocar(pid, numeroPagina, Enum.Enum.FirstFit);
                     if (molduraAlocada == null)
@@ -99,7 +104,8 @@ namespace SimuladorSO.Nucleo
                     moldura = pagina.Moldura;
                 }
 
-                if (_kernel.TLBAtivada)
+                // CORREÇÃO: Acesso via _kernel.Configuracoes
+                if (_kernel.Configuracoes.TLBAtivada)
                     _tlb.Inserir(pid, numeroPagina, moldura.Value, _kernel.Clock.TempoAtual);
 
                 pagina.Referenciada = true;
@@ -107,7 +113,7 @@ namespace SimuladorSO.Nucleo
             }
 
             int enderecoFisico = moldura.Value * tamanhoPagina + deslocamento;
-            _kernel.RegistrarEvento(
+            _kernel.RegistrarLog(
                 $"Acesso à memória: {pid} - End. Lógico: 0x{enderecoLogico:X4} -> End. Físico: 0x{enderecoFisico:X4}"
             );
         }

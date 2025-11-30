@@ -1,6 +1,6 @@
-﻿using SimuladorSO.Nucleo.Interface;
+﻿using SistemaOperacional10._0.Nucleo.Interface;
 
-namespace SimuladorSO.Nucleo
+namespace SistemaOperacional10._0.Nucleo
 {
     public class Dispositivo : IDispositivo
     {

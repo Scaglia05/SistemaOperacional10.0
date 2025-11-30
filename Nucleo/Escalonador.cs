@@ -1,8 +1,8 @@
-﻿using SimuladorSO.Enum;
-using SimuladorSO.Nucleo.Interface;
-using SimuladorSO.Processos;
+﻿using SistemaOperacional10._0.Enum;
+using SistemaOperacional10._0.Nucleo.Interface;
+using SistemaOperacional10._0.Processos;
 
-namespace SimuladorSO.Nucleo
+namespace SistemaOperacional10._0.Nucleo
 {
     public class Escalonador
     {
@@ -35,7 +35,7 @@ namespace SimuladorSO.Nucleo
                 _ => _algoritmo
             };
 
-            _kernel.RegistrarEvento($"Algoritmo de escalonamento agora: {_algoritmo.Nome}");
+            _kernel.RegistrarLog($"Algoritmo de escalonamento agora: {_algoritmo.Nome}");
         }
 
         public void AdicionarProcessoNaFila(Processo processo)
@@ -134,9 +134,9 @@ namespace SimuladorSO.Nucleo
 
                 _processoAtual = proximo;
                 _processoAtual.MudarEstado(EEstadoProcesso.Executando);
-                _processoAtual.PCB.QuantumRestante = _kernel.Quantum;
+                _processoAtual.PCB.QuantumRestante = _kernel.Configuracoes.Quantum;
 
-                _kernel.RegistrarEvento(
+                _kernel.RegistrarLog(
                     $"Processo selecionado: PID={_processoAtual.PCB.PID} ({_processoAtual.PCB.PIDSimbolico})"
                 );
             }

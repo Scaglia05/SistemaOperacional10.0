@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SimuladorSO.Nucleo
+namespace SistemaOperacional10._0.Nucleo
 {
     public class Pagina
     {

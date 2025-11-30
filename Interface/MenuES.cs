@@ -1,101 +1,100 @@
-﻿using SimuladorSO.Interface;
-using SimuladorSO.Nucleo;
-using System.Threading;
+﻿using System;
+using System.Collections.Generic;
+using SistemaOperacional10._0.Interface;
+using SistemaOperacional10._0.Nucleo;
 
 public class MenuES : MenuBase
 {
-    public MenuES(Kernel kernel) : base(kernel) { }
+    private List<OpcaoMenu> _opcoes;
+
+    public MenuES(Kernel kernel) : base(kernel)
+    {
+        InicializarOpcoes();
+    }
+
+    private void InicializarOpcoes()
+    {
+        _opcoes = new List<OpcaoMenu>
+        {
+            new OpcaoMenu("💻", "Listar Dispositivos",         () => TelaListarDispositivos()),
+            new OpcaoMenu("⏳", "Nova Requisição (Bloqueante)",() => TelaCriarRequisicao(true)),
+            new OpcaoMenu("⚡", "Nova Requisição (Async)",     () => TelaCriarRequisicao(false)),
+            new OpcaoMenu("⏱️", "Processar 1 Tick de I/O",     () => TelaProcessarTick()),
+            new OpcaoMenu("📋", "Visualizar Filas",            () => TelaMostrarFilas()),
+            new OpcaoMenu("🛎️", "Visualizar Interrupções",     () => TelaMostrarInterrupcoes()),
+            new OpcaoMenu("⬅️", "Voltar ao Menu Principal",    () => { /* Controlado pelo MenuBase */ })
+        };
+    }
+
     public void Executar()
     {
-        bool ativo = true;
-        while (ativo)
-        {
-            Console.Clear();
-            ExibirCabecalho();
-            ExibirOpcoes();
+        string asciiArt = @"
+   ___  ____   ___   _____  __  _   _ _____ 
+  |_ _||  _ \ / _ \ |_   _|/ / | | | |_   _|
+   | | | |_) | | | |  | | / /  | | | | | |  
+   | | |  __/| |_| |  | |/ /   | |_| | | |  
+  |___||_|    \___/   |_/_/     \___/  |_|  
+        ";
 
-            Console.Write("\n🔹 Escolha uma opção: ");
-            string? opcao = Console.ReadLine()?.Trim();
-
-            switch (opcao)
-            {
-                case "1":
-                    Kernel.GerenciadorES.ListarDispositivos();
-                    Pausa();
-                    break;
-                case "2":
-                    CriarRequisicao(true);
-                    break;
-                case "3":
-                    CriarRequisicao(false);
-                    break;
-                case "4":
-                    Kernel.GerenciadorES.ProcessarTick();
-                    Aviso("✅ 1 tick processado.");
-                    Pausa();
-                    break;
-                case "5":
-                    Kernel.GerenciadorES.MostrarFilasDispositivos();
-                    Pausa();
-                    break;
-                case "6":
-                    Kernel.GerenciadorES.MostrarInterrupcoes();
-                    Pausa();
-                    break;
-                case "0":
-                    ativo = false;
-                    break;
-                default:
-                    Aviso("⚠ Opção inválida! Tente novamente...");
-                    Thread.Sleep(1000);
-                    break;
-            }
-        }
+        ExecutarMenu("Gerenciador de Entrada/Saída", asciiArt, _opcoes);
     }
 
-    private void ExibirCabecalho()
+
+    private void TelaListarDispositivos()
     {
-        Console.ForegroundColor = ConsoleColor.Cyan;
-        Console.WriteLine("╔════════════════════════════════════════╗");
-        Console.WriteLine("║          DISPOSITIVOS DE I/O           ║");
-        Console.WriteLine("╚════════════════════════════════════════╝");
-        Console.ResetColor();
+        ExibirCabecalhoAcao("Dispositivos Conectados");
+        Kernel.GerenciadorES.ListarDispositivos();
+        Pausa();
     }
 
-    private void ExibirOpcoes()
+    private void TelaCriarRequisicao(bool bloqueante)
     {
-        Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.WriteLine("\n┌───────────────────── MENU ──────────────────────┐");
-        Console.WriteLine("│ 1) 💻 Listar dispositivos                         │");
-        Console.WriteLine("│ 2) ⏳ Requisição bloqueante                        │");
-        Console.WriteLine("│ 3) ⚡ Requisição não bloqueante                     │");
-        Console.WriteLine("│ 4) ⏱️ Processar 1 tick                               │");
-        Console.WriteLine("│ 5) 📋 Ver filas de dispositivos                     │");
-        Console.WriteLine("│ 6) 🛎️ Ver interrupções                               │");
-        Console.WriteLine("│ 0) ❌ Voltar                                      │");
-        Console.WriteLine("└─────────────────────────────────────────────────┘");
-        Console.ResetColor();
-    }
+        string tipo = bloqueante ? "BLOQUEANTE" : "NÃO BLOQUEANTE (ASYNC)";
+        ExibirCabecalhoAcao($"Nova Requisição - {tipo}");
 
-    private void CriarRequisicao(bool bloqueante)
-    {
-        var pid = LerEntrada("🆔 PID simbólico: ");
-        var disp = LerEntrada("💻 Dispositivo (DISCO, TECLADO, IMPRESSORA): ")?.ToUpper();
-        var tempo = LerInteiro("⏱️ Tempo (ticks): ");
+        var pid = LerTexto("PID do Processo");
+        var disp = LerTexto("Dispositivo (Disco, Teclado, Impressora)")?.ToUpper();
+        var tempo = LerInt("Duração (ticks)");
 
         if (!string.IsNullOrEmpty(pid) && !string.IsNullOrEmpty(disp) && tempo.HasValue)
         {
-            Kernel.GerenciadorES.CriarRequisicao(pid, disp, tempo.Value, bloqueante);
-            Aviso($"✅ {(bloqueante ? "Bloqueante" : "Não bloqueante")} criada!");
-            Pausa();
+            try
+            {
+                Kernel.GerenciadorES.CriarRequisicao(pid, disp, tempo.Value, bloqueante);
+                MensagemSucesso("Requisição enviada ao controlador de I/O!");
+            } catch (Exception ex)
+            {
+                MensagemErro($"Erro ao criar requisição: {ex.Message}");
+            }
+        } else
+        {
+            MensagemErro("Dados inválidos. Verifique o nome do dispositivo.");
         }
+        Pausa();
     }
 
-    private void Pausa()
+    private void TelaProcessarTick()
     {
-        Console.ForegroundColor = ConsoleColor.Gray;
-        Console.WriteLine("\nPressione qualquer tecla para continuar...");
-        Console.ReadKey(true);
-        Console.ResetColor();
+        ExibirCabecalhoAcao("Simulação de Hardware");
+
+        Kernel.GerenciadorES.ProcessarTick();
+
+        MensagemSucesso("Ciclo de I/O processado.");
+        Console.WriteLine("  Verifique as interrupções para ver se algum processo foi liberado.");
+        Pausa();
+    }
+
+    private void TelaMostrarFilas()
+    {
+        ExibirCabecalhoAcao("Filas de Espera por Dispositivo");
+        Kernel.GerenciadorES.MostrarFilasDispositivos();
+        Pausa();
+    }
+
+    private void TelaMostrarInterrupcoes()
+    {
+        ExibirCabecalhoAcao("Buffer de Interrupções");
+        Kernel.GerenciadorES.MostrarInterrupcoes();
+        Pausa();
     }
 }

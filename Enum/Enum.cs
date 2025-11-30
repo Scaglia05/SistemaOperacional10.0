@@ -1,4 +1,4 @@
-﻿namespace SimuladorSO.Enum
+﻿namespace SistemaOperacional10._0.Enum
 {
     public enum Enum : sbyte
     {

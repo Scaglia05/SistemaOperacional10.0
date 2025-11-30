@@ -1,7 +1,7 @@
-﻿using SimuladorSO.Nucleo;
-using SimuladorSO.Processos;
+﻿using SistemaOperacional10._0.Nucleo;
+using SistemaOperacional10._0.Processos;
 
-namespace SimuladorSO.Nucleo.Interface
+namespace SistemaOperacional10._0.Nucleo.Interface
 {
     public interface IEscalonamento
     {

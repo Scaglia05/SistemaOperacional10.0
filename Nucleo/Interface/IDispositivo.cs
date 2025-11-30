@@ -1,4 +1,4 @@
-﻿namespace SimuladorSO.Nucleo.Interface
+﻿namespace SistemaOperacional10._0.Nucleo.Interface
 {
     public interface IDispositivo
     {

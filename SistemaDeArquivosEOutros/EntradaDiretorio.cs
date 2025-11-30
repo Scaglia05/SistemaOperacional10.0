@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace SimuladorSO.SistemaDeArquivosEOutros
+namespace SistemaOperacional10._0.SistemaDeArquivosEOutros
 {
     public class EntradaDiretorio
     {

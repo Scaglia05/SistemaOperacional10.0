@@ -1,16 +1,16 @@
-﻿using SimuladorSO.Enum;
-using SimuladorSO.Nucleo;
-using SimuladorSO.SistemaDeArquivosEOutros;
+﻿using SistemaOperacional10._0.Enum;
+using SistemaOperacional10._0.Nucleo;
+using SistemaOperacional10._0.SistemaDeArquivosEOutros;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SimuladorSO.Processos
+namespace SistemaOperacional10._0.Processos
 {
-    public class GerenciadorDeThreads
+    public class GerenciadorThreads
     {
         private readonly Kernel _kernel;
         private readonly Dictionary<int, ThreadSimulada> _threads = new();
-        public GerenciadorDeThreads(Kernel kernel) => _kernel = kernel;
+        public GerenciadorThreads(Kernel kernel) => _kernel = kernel;
 
         public ThreadSimulada? CriarThread(string pidSimbolico)
         {

@@ -1,6 +1,6 @@
-﻿using SimuladorSO.Enum;
-using SimuladorSO.Nucleo;
-using SimuladorSO.Nucleo.Interface;
+﻿using SistemaOperacional10._0.Enum;
+using SistemaOperacional10._0.Nucleo;
+using SistemaOperacional10._0.Nucleo.Interface;
 
 public class GerenciadorES
 {
@@ -28,7 +28,7 @@ public class GerenciadorES
         _dispositivos[nome] = dispositivo;
         _filasDispositivos[nome] = new Queue<RequisicaoES>();
 
-        _kernel.RegistrarEvento($"Novo dispositivo registrado: {nome}");
+        _kernel.RegistrarLog($"Novo dispositivo registrado: {nome}");
     }
 
     public void CriarRequisicao(string pidSimbolico, string nomeDispositivo, int tempo, bool bloqueante = true)
@@ -52,7 +52,7 @@ public class GerenciadorES
         if (bloqueante)
             processo.MudarEstado(EEstadoProcesso.Bloqueado);
 
-        _kernel.RegistrarEvento(
+        _kernel.RegistrarLog(
             $"Solicitação de I/O criada: {pidSimbolico} -> {nomeDispositivo} ({tempo} ticks)"
         );
     }
@@ -86,7 +86,7 @@ public class GerenciadorES
                 proximaRequisicao.TempoInicio = _kernel.Clock.TempoAtual;
                 dispositivo.IniciarOperacao(proximaRequisicao);
 
-                _kernel.RegistrarEvento(
+                _kernel.RegistrarLog(
                     $"Início de operação I/O: {proximaRequisicao.PIDProcesso} em {dispositivo.Nome}"
                 );
             }
@@ -106,7 +106,7 @@ public class GerenciadorES
     {
         var interrupcao = new Interrupcao(tipo, origem, mensagem, _kernel.Clock.TempoAtual);
         _interrupcoes.Add(interrupcao);
-        _kernel.RegistrarEvento($"Interrupção registrada: {mensagem}");
+        _kernel.RegistrarLog($"Interrupção registrada: {mensagem}");
     }
 
     public void ListarDispositivos()

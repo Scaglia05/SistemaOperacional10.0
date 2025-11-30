@@ -1,7 +1,7 @@
-﻿using SimuladorSO.Nucleo;
+﻿using SistemaOperacional10._0.Nucleo;
 using System;
 
-namespace SimuladorSO
+namespace SistemaOperacional10._0
 {
     internal class Entrada
     {

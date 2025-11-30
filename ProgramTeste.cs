@@ -1,7 +1,7 @@
 ﻿
-using SimuladorSO.Nucleo;
+using SistemaOperacional10._0.Nucleo;
 
-namespace SimuladorSO
+namespace SistemaOperacional10._0
 {
     internal class ProgramTeste
     {
@@ -10,7 +10,7 @@ namespace SimuladorSO
             Console.OutputEncoding = System.Text.Encoding.UTF8;
             Console.Clear();
 
-        var kernel = new Kernel();
+            var kernel = new Kernel();
 
             // Mensagem inicial
             Console.WriteLine("SIMULADOR SO - TESTE RÁPIDO\n");

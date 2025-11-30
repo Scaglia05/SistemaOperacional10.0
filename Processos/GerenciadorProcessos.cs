@@ -1,19 +1,19 @@
-﻿using SimuladorSO.Enum;
-using SimuladorSO.Nucleo;
-using SimuladorSO.SistemaDeArquivosEOutros;
+﻿using SistemaOperacional10._0.Enum;
+using SistemaOperacional10._0.Nucleo;
+using SistemaOperacional10._0.SistemaDeArquivosEOutros;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SimuladorSO.Processos
+namespace SistemaOperacional10._0.Processos
 {
-    public class GerenciadorDeProcessos
+    public class GerenciadorProcessos
     {
         private readonly Kernel _kernel;
         private readonly Dictionary<int, Processo> _processos = new();
         private readonly Dictionary<string, int> _mapeamentoPID = new();
 
-        public GerenciadorDeProcessos(Kernel kernel) => _kernel = kernel;
+        public GerenciadorProcessos(Kernel kernel) => _kernel = kernel;
 
         public Processo CriarProcesso(string pidSimbolico, int prioridade)
         {
@@ -24,7 +24,7 @@ namespace SimuladorSO.Processos
             _processos[pid] = processo;
             _mapeamentoPID[pidSimbolico] = pid;
 
-            _kernel.RegistrarEvento($"Processo criado: {pidSimbolico} (PID={pid}, Prioridade={prioridade})");
+            _kernel.RegistrarLog($"Processo criado: {pidSimbolico} (PID={pid}, Prioridade={prioridade})");
             return processo;
         }
 
@@ -33,7 +33,7 @@ namespace SimuladorSO.Processos
             if (_processos.Remove(pid, out var processo))
             {
                 _mapeamentoPID.Remove(processo.PCB.PIDSimbolico);
-                _kernel.RegistrarEvento($"Processo removido: PID={pid}");
+                _kernel.RegistrarLog($"Processo removido: PID={pid}");
             }
         }
 
@@ -44,7 +44,7 @@ namespace SimuladorSO.Processos
             {
                 processo.MudarEstado(EEstadoProcesso.Finalizado);
                 processo.PCB.TempoFinalizacao = _kernel.Clock.TempoAtual;
-                _kernel.RegistrarEvento($"Processo finalizado: {pidSimbolico} (PID={pid})");
+                _kernel.RegistrarLog($"Processo finalizado: {pidSimbolico} (PID={pid})");
             }
         }
 
@@ -53,7 +53,7 @@ namespace SimuladorSO.Processos
             if (_processos.TryGetValue(pid, out var processo))
             {
                 processo.MudarEstado(novoEstado);
-                _kernel.RegistrarEvento($"Processo PID={pid} mudou para estado: {novoEstado}");
+                _kernel.RegistrarLog($"Processo PID={pid} mudou para estado: {novoEstado}");
             }
         }
 
