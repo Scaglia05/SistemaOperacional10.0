@@ -23,8 +23,6 @@ O simulador permite:
 | Nome                             | RA     | E-mail                                                              |
 | -------------------------------- | ------ | ------------------------------------------------------------------- |
 | Guilherme Augusto Scaglia        | 111598 | [scaglia@alunos.fho.edu.br](mailto:scaglia@alunos.fho.edu.br)       |
-| João Pedro Denardo               | 113036 | [denardo749@alunos.fho.edu.br](mailto:denardo749@alunos.fho.edu.br) |
-| Pedro Henrique Oliveira de Souza | 113364 | [pedro1204@alunos.fho.edu.br](mailto:pedro1204@alunos.fho.edu.br)   |
 
 ---
 
